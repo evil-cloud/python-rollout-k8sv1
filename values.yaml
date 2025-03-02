@@ -1,3 +1,9 @@
+preSyncHook:
+  enabled: true
+  serviceAccountName: pre-sync-check-sa
+  image: bitnami/kubectl:latest
+  backoffLimit: 1
+
 replicaCount: 3
 image:
   repository: d4rkghost47/python-rollout-appv1
