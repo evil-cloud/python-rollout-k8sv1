@@ -1,55 +1,46 @@
 replicaCount: 3
-
 image:
   repository: d4rkghost47/python-rollout-appv1
   pullPolicy: IfNotPresent
-  tag: 3de98c65
-
+  tag: latest
 version: v1
-
 serviceAccount:
   create: true
   automount: true
   annotations: {}
   name: ""
-
 podSecurityContext:
   runAsUser: 1000
   runAsGroup: 3000
   fsGroup: 2000
   seccompProfile:
     type: RuntimeDefault
-
-securityContext: 
+securityContext:
   capabilities:
     drop:
-      - ALL
+    - ALL
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   allowPrivilegeEscalation: false
-
 service:
   type: ClusterIP
   port: 8000
-
 ingress:
   enabled: true
-  className: "nginx"
-  annotations: 
+  className: nginx
+  annotations:
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
-    external-dns.alpha.kubernetes.io/hostname: "rolloutapi.infraops.us"
-    external-dns.alpha.kubernetes.io/target: "6eb6270f-6be8-42c6-9e60-e9e7050350e5.cfargotunnel.com"
+    external-dns.alpha.kubernetes.io/hostname: rolloutapi.infraops.us
+    external-dns.alpha.kubernetes.io/target: 6eb6270f-6be8-42c6-9e60-e9e7050350e5.cfargotunnel.com
   hosts:
-    - host: rolloutapi.infraops.us
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
+  - host: rolloutapi.infraops.us
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
   tls: []
-
 podDisruptionBudget:
   enabled: true
   minAvailable: 1
-
 resources:
   limits:
     cpu: 500m
@@ -57,24 +48,20 @@ resources:
   requests:
     cpu: 250m
     memory: 256Mi
-
 livenessProbe:
   httpGet:
     path: /health
     port: 8000
   initialDelaySeconds: 5
   periodSeconds: 5
-
 readinessProbe:
   httpGet:
     path: /health
     port: 8000
   initialDelaySeconds: 5
   periodSeconds: 5
-
 autoscaling:
   enabled: true
   minReplicas: 3
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
-
