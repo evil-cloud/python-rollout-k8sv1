@@ -65,19 +65,3 @@ autoscaling:
   minReplicas: 3
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
-
-metrics:
-  enabled: true
-  scrapePath: /metrics
-
-  serviceMonitor:
-    enabled: true
-    namespace: "monitoring"
-    interval: "30s"
-    telemetryPath: "/metrics"
-    labels:
-      release: "prom"
-    timeout: "20s"
-    endpointAdditionalProperties: {}
-    disableAPICheck: false
-
