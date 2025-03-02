@@ -1,14 +1,12 @@
-{{- if .Values.podDisruptionBudget.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Release.Name }}-pdb
+  name: {{ include "rollout-k8s.fullname" . }}-pdb
   labels:
-    app: {{ .Release.Name }}
+    {{- include "rollout-k8s.labels" . | nindent 4 }}
 spec:
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
-{{- end }}
+      {{- include "rollout-k8s.selectorLabels" . | nindent 6 }}
 
