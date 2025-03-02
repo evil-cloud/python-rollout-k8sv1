@@ -1,0 +1,23 @@
+{{- if .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "rollout-k8s.fullname" . }}-monitor
+  namespace: {{ .Values.metrics.serviceMonitor.namespace }}
+  labels:
+    {{- toYaml .Values.metrics.serviceMonitor.labels | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  endpoints:
+    - port: {{ .Values.metrics.portName }}
+      path: {{ .Values.metrics.scrapePath }}
+      interval: {{ .Values.metrics.serviceMonitor.interval }}
+      scrapeTimeout: {{ .Values.metrics.serviceMonitor.timeout }}
+      honorLabels: true
+      {{- if .Values.metrics.serviceMonitor.endpointAdditionalProperties }}
+      {{- toYaml .Values.metrics.serviceMonitor.endpointAdditionalProperties | nindent 6 }}
+      {{- end }}
+{{- end }}
+
