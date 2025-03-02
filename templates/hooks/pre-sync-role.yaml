@@ -3,7 +3,7 @@ kind: Role
 metadata:
   name: pre-sync-check-role
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-wave: "-2"
 rules:
   - apiGroups: [""]
     resources: ["nodes"]
