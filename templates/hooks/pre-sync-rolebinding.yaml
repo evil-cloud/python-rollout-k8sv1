@@ -3,7 +3,7 @@ kind: RoleBinding
 metadata:
   name: pre-sync-check-rb
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-wave: "-5"
 subjects:
   - kind: ServiceAccount
     name: {{ .Values.preSyncHook.serviceAccountName }}
