@@ -10,9 +10,12 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
   endpoints:
-    - port: http
-      path: {{ .Values.metrics.scrapePath }}
+    - path: {{ .Values.metrics.scrapePath }}
+      targetPort: http  
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       scrapeTimeout: {{ .Values.metrics.serviceMonitor.timeout }}
       honorLabels: true

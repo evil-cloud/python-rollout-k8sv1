@@ -80,3 +80,4 @@ metrics:
     timeout: "20s"
     endpointAdditionalProperties: {}
     disableAPICheck: false
+
