@@ -68,8 +68,6 @@ autoscaling:
 
 metrics:
   enabled: true
-  port: 9000
-  portName: http-metrics
   scrapePath: /metrics
 
   serviceMonitor:

@@ -11,13 +11,6 @@ spec:
       port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}
       protocol: TCP
-
-  {{- if .Values.metrics.enabled }}
-    - name: {{ .Values.metrics.portName }}
-      port: {{ .Values.metrics.port }}
-      targetPort: {{ .Values.metrics.port }}
-      protocol: TCP
-  {{- end }}
   selector:
     app: {{ .Release.Name }}
 

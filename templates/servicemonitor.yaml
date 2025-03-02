@@ -11,7 +11,7 @@ spec:
     matchLabels:
       app: {{ .Release.Name }}
   endpoints:
-    - port: {{ .Values.metrics.portName }}
+    - port: http
       path: {{ .Values.metrics.scrapePath }}
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       scrapeTimeout: {{ .Values.metrics.serviceMonitor.timeout }}
