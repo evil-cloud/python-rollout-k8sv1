@@ -1,9 +1,8 @@
-
 replicaCount: 3
 image:
   repository: d4rkghost47/python-rollout-appv1
   pullPolicy: IfNotPresent
-  tag: aeabe61a
+  tag: fc7bdbb0
 version: v1
 serviceAccount:
   create: true
@@ -66,14 +65,12 @@ autoscaling:
   minReplicas: 3
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
-
-
 metrics:
   serviceMonitor:
     enable: true
-    namespace: "monitoring"
-    interval: "30s"
-    telemetryPath: "/metrics"
+    namespace: monitoring
+    interval: 30s
+    telemetryPath: /metrics
     labels:
-      release: "prom"
-    timeout: "20s"
+      release: prom
+    timeout: 20s
