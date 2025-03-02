@@ -2,7 +2,7 @@ replicaCount: 3
 image:
   repository: d4rkghost47/python-rollout-appv1
   pullPolicy: IfNotPresent
-  tag: latest
+  tag: f99a1ef6
 version: v1
 serviceAccount:
   create: true
