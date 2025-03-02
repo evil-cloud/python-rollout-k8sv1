@@ -9,13 +9,15 @@ spec:
   ports:
     - name: http
       port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: {{ .Values.service.port }}
       protocol: TCP
+
   {{- if .Values.metrics.enabled }}
     - name: {{ .Values.metrics.portName }}
       port: {{ .Values.metrics.port }}
-      targetPort: http
+      targetPort: {{ .Values.metrics.port }}
       protocol: TCP
   {{- end }}
   selector:
     app: {{ .Release.Name }}
+
