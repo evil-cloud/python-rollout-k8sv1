@@ -2,7 +2,7 @@ replicaCount: 3
 image:
   repository: d4rkghost47/python-rollout-appv1
   pullPolicy: IfNotPresent
-  tag: fc7bdbb0
+  tag: fc2e2f08
 version: v1
 serviceAccount:
   create: true
@@ -74,11 +74,9 @@ metrics:
     labels:
       release: prom
     timeout: 20s
-
 extraVolumes:
-  - name: sqlite-storage
-    emptyDir: {}
-
+- name: sqlite-storage
+  emptyDir: {}
 extraVolumeMounts:
-  - mountPath: "/app/data"
-    name: sqlite-storage
+- mountPath: /app/data
+  name: sqlite-storage
