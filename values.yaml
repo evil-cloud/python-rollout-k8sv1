@@ -74,3 +74,11 @@ metrics:
     labels:
       release: prom
     timeout: 20s
+
+extraVolumes:
+  - name: sqlite-storage
+    emptyDir: {}
+
+extraVolumeMounts:
+  - mountPath: "/app/data"
+    name: sqlite-storage
