@@ -65,6 +65,14 @@ autoscaling:
   minReplicas: 3
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
+
+extraVolumes:
+- name: sqlite-storage
+  emptyDir: {}
+extraVolumeMounts:
+- mountPath: /app/data
+  name: sqlite-storage
+
 metrics:
   serviceMonitor:
     enable: true
@@ -74,9 +82,3 @@ metrics:
     labels:
       release: prom
     timeout: 20s
-extraVolumes:
-- name: sqlite-storage
-  emptyDir: {}
-extraVolumeMounts:
-- mountPath: /app/data
-  name: sqlite-storage
