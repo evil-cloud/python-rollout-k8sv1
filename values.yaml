@@ -1,5 +1,5 @@
-nameOverride: spring-gitops
-fullnameOverride: spring-gitops-canary
+nameOverride: python-gitops
+fullnameOverride: python-gitops-canary
 
 image:
   repository: d4rkghost47/python-rollout-appv1
