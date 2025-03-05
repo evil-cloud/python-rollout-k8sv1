@@ -3,7 +3,7 @@ fullnameOverride: python-gitops-canary
 image:
   repository: d4rkghost47/python-rollout-appv1
   pullPolicy: IfNotPresent
-  tag: 44f72ea7
+  tag: 1a62f477
 version: v1
 serviceAccount:
   create: true
