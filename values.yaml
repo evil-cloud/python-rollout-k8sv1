@@ -1,10 +1,9 @@
 nameOverride: python-gitops
 fullnameOverride: python-gitops-canary
-
 image:
   repository: d4rkghost47/python-rollout-appv1
   pullPolicy: IfNotPresent
-  tag: 5173da6f
+  tag: 44f72ea7
 version: v1
 serviceAccount:
   create: true
@@ -68,14 +67,12 @@ autoscaling:
   minReplicas: 5
   maxReplicas: 15
   targetCPUUtilizationPercentage: 80
-
 extraVolumes:
 - name: sqlite-storage
   emptyDir: {}
 extraVolumeMounts:
 - mountPath: /app/data
   name: sqlite-storage
-
 metrics:
   serviceMonitor:
     enabled: true
@@ -85,60 +82,52 @@ metrics:
     labels:
       release: prom
     timeout: 20s
-
 analysisTemplates:
-  - name: success-rate-analysis
-    prometheus:
-      address: "http://prom-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
-    conditions:
-      success: "result >= 0.95"
-      failure: "result < 0.90"
-    query: ""  
-
-
-
+- name: success-rate-analysis
+  prometheus:
+    address: http://prom-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+  conditions:
+    success: result >= 0.95
+    failure: result < 0.90
+  query: ""
 rollout:
   replicas: 10
   strategy:
     steps:
-      - setWeight: 10
-        pause:
-          enabled: true
-          duration: 60s
-        analysis:
-          enabled: true
-          templateName: success-rate-analysis
-          startingStep: 1
-
-      - setWeight: 25
-        analysis:
-          enabled: true
-          templateName: success-rate-analysis
-          startingStep: 2
-
-      - setWeight: 50
-        pause:
-          enabled: false
-          duration: 90s
-        analysis:
-          enabled: true
-          templateName: success-rate-analysis
-          startingStep: 3
-
-      - setWeight: 75
-        pause:
-          enabled: true
-          duration: 120s
-        analysis:
-          enabled: true
-          templateName: success-rate-analysis
-          startingStep: 4
-
-      - setWeight: 100
-        pause:
-          enabled: true
-          duration: 60s 
-        analysis:
-          enabled: true
-          templateName: success-rate-analysis
-          startingStep: 5  
+    - setWeight: 10
+      pause:
+        enabled: true
+        duration: 60s
+      analysis:
+        enabled: true
+        templateName: success-rate-analysis
+        startingStep: 1
+    - setWeight: 25
+      analysis:
+        enabled: true
+        templateName: success-rate-analysis
+        startingStep: 2
+    - setWeight: 50
+      pause:
+        enabled: false
+        duration: 90s
+      analysis:
+        enabled: true
+        templateName: success-rate-analysis
+        startingStep: 3
+    - setWeight: 75
+      pause:
+        enabled: true
+        duration: 120s
+      analysis:
+        enabled: true
+        templateName: success-rate-analysis
+        startingStep: 4
+    - setWeight: 100
+      pause:
+        enabled: true
+        duration: 60s
+      analysis:
+        enabled: true
+        templateName: success-rate-analysis
+        startingStep: 5
