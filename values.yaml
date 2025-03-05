@@ -1,4 +1,6 @@
-replicaCount: 3
+nameOverride: spring-gitops
+fullnameOverride: spring-gitops-canary
+
 image:
   repository: d4rkghost47/python-rollout-appv1
   pullPolicy: IfNotPresent
@@ -30,10 +32,11 @@ ingress:
   className: nginx
   annotations:
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
-    external-dns.alpha.kubernetes.io/hostname: rolloutapi.infraops.us
+    external-dns.alpha.kubernetes.io/hostname: rolloutapiv2.infraops.us
     external-dns.alpha.kubernetes.io/target: 6eb6270f-6be8-42c6-9e60-e9e7050350e5.cfargotunnel.com
+    external-dns.alpha.kubernetes.io/ttl: "60"
   hosts:
-  - host: rolloutapi.infraops.us
+  - host: rolloutapiv2.infraops.us
     paths:
     - path: /
       pathType: ImplementationSpecific
@@ -43,11 +46,11 @@ podDisruptionBudget:
   minAvailable: 1
 resources:
   limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
     cpu: 250m
     memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
 livenessProbe:
   httpGet:
     path: /health
@@ -62,8 +65,8 @@ readinessProbe:
   periodSeconds: 5
 autoscaling:
   enabled: true
-  minReplicas: 3
-  maxReplicas: 5
+  minReplicas: 5
+  maxReplicas: 15
   targetCPUUtilizationPercentage: 80
 
 extraVolumes:
@@ -75,10 +78,67 @@ extraVolumeMounts:
 
 metrics:
   serviceMonitor:
-    enable: true
+    enabled: true
     namespace: monitoring
     interval: 30s
     telemetryPath: /metrics
     labels:
       release: prom
     timeout: 20s
+
+analysisTemplates:
+  - name: success-rate-analysis
+    prometheus:
+      address: "http://prom-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+    conditions:
+      success: "result >= 0.95"
+      failure: "result < 0.90"
+    query: ""  
+
+
+
+rollout:
+  replicas: 10
+  strategy:
+    steps:
+      - setWeight: 10
+        pause:
+          enabled: true
+          duration: 60s
+        analysis:
+          enabled: true
+          templateName: success-rate-analysis
+          startingStep: 1
+
+      - setWeight: 25
+        analysis:
+          enabled: true
+          templateName: success-rate-analysis
+          startingStep: 2
+
+      - setWeight: 50
+        pause:
+          enabled: false
+          duration: 90s
+        analysis:
+          enabled: true
+          templateName: success-rate-analysis
+          startingStep: 3
+
+      - setWeight: 75
+        pause:
+          enabled: true
+          duration: 120s
+        analysis:
+          enabled: true
+          templateName: success-rate-analysis
+          startingStep: 4
+
+      - setWeight: 100
+        pause:
+          enabled: true
+          duration: 60s 
+        analysis:
+          enabled: true
+          templateName: success-rate-analysis
+          startingStep: 5  

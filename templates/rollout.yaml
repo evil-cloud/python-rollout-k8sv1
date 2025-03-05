@@ -1,52 +1,47 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "rollout-k8s.fullname" . }}-rollout
   labels:
-    app: {{ .Release.Name }}
+    app: {{ include "rollout-k8s.fullname" . }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.rollout.replicas }}
   strategy:
     canary:
       steps:
-        - setWeight: 10
-        - pause: { duration: 60s }
+        {{- range .Values.rollout.strategy.steps }}
+        - setWeight: {{ .setWeight }}
+        {{- if .pause }}
+          {{- if .pause.enabled }}
+        - pause: { duration: {{ .pause.duration }} }
+          {{- end }}
+        {{- end }}
+        {{- if .analysis }}
+          {{- if .analysis.enabled }}
         - analysis:
             templates:
-              - templateName: success-rate-analysis
-            startingStep: 1
-        - setWeight: 25
-        - pause: { duration: 90s }
-        - analysis:
-            templates:
-              - templateName: success-rate-analysis
-            startingStep: 2
-        - setWeight: 50
-        - pause: { duration: 120s }
-        - setWeight: 75
-        - pause: { duration: 120s }
-        - analysis:
-            templates:
-              - templateName: success-rate-analysis
-            startingStep: 3
-        - setWeight: 100
-  revisionHistoryLimit: 3
+              - templateName: {{ include "rollout-k8s.fullname" $ }}-{{ .analysis.templateName }}
+            startingStep: {{ .analysis.startingStep }}
+            failureLimit: 0
+          {{- end }}
+        {{- end }}
+        {{- end }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ include "rollout-k8s.fullname" . }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ include "rollout-k8s.fullname" . }}
     spec:
-      serviceAccountName: {{ include "rollout-k8s.serviceAccountName" . }}
+      serviceAccountName: {{ include "rollout-k8s.fullname" . }}-sa
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "rollout-k8s.name" . }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -62,4 +57,3 @@ spec:
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
       volumes:
         {{- toYaml .Values.extraVolumes | nindent 8 }}
-

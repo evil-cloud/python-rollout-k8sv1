@@ -1,4 +1,4 @@
-{{- if .Values.metrics.serviceMonitor.enable }}
+{{- if .Values.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/name: {{ include "rollout-k8s.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   namespaceSelector:
     matchNames:

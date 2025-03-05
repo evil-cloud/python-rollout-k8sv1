@@ -12,5 +12,5 @@ spec:
       targetPort: {{ .Values.service.port }}
       protocol: TCP
   selector:
-    app: {{ .Release.Name }}
+    app: {{ include "rollout-k8s.fullname" . }}
 

@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "rollout-k8s.fullname" . }}
+  name: {{ include "rollout-k8s.fullname" . }}-hpa
   labels:
     {{- include "rollout-k8s.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
-    name: {{ .Release.Name }}
+    name: {{ include "rollout-k8s.fullname" . }}-rollout
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

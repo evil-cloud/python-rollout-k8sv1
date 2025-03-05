@@ -1,25 +1,30 @@
 {{/*
-Expand the name of the chart.
+Nombre base para los recursos.
 */}}
 {{- define "rollout-k8s.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- if .Values.nameOverride }}
+  {{- .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+  {{- .Chart.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
+Nombre completo del recurso.
 */}}
 {{- define "rollout-k8s.fullname" -}}
-{{- if and .Values.fullnameOverride (ne .Values.fullnameOverride "") }}
+{{- if .Values.fullnameOverride }}
   {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
-  {{- $name := default .Chart.Name .Values.nameOverride }}
-  {{- if contains $name .Release.Name }}
+  {{- $name := include "rollout-k8s.name" . }}
+  {{- if contains .Release.Name $name }}
     {{- .Release.Name | trunc 63 | trimSuffix "-" }}
   {{- else }}
     {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
   {{- end }}
 {{- end }}
 {{- end }}
+
 
 {{/*
 Create chart name and version as used by the chart label.
