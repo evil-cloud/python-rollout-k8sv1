@@ -21,8 +21,16 @@ spec:
         - analysis:
             templates:
               - templateName: {{ include "rollout-k8s.fullname" $ }}-{{ .analysis.templateName }}
+            {{- if .analysis.startingStep }}
             startingStep: {{ .analysis.startingStep }}
+            {{- else }}
+            startingStep: 1
+            {{- end }}
+            {{- if .analysis.failureLimit }}
+            failureLimit: {{ .analysis.failureLimit }}
+            {{- else }}
             failureLimit: 0
+            {{- end }}
           {{- end }}
         {{- end }}
         {{- end }}
@@ -57,3 +65,4 @@ spec:
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
       volumes:
         {{- toYaml .Values.extraVolumes | nindent 8 }}
+
