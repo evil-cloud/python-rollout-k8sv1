@@ -21,16 +21,8 @@ spec:
         - analysis:
             templates:
               - templateName: {{ include "rollout-k8s.fullname" $ }}-{{ .analysis.templateName }}
-            {{- if .analysis.startingStep }}
-            startingStep: {{ .analysis.startingStep }}
-            {{- else }}
-            startingStep: 1
-            {{- end }}
-            {{- if .analysis.failureLimit }}
-            failureLimit: {{ .analysis.failureLimit }}
-            {{- else }}
+            startingStep: {{ .analysis.startingStep | default 1 }}
             failureLimit: 0
-            {{- end }}
           {{- end }}
         {{- end }}
         {{- end }}
