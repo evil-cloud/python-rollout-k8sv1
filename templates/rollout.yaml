@@ -22,7 +22,7 @@ spec:
             templates:
               - templateName: {{ include "rollout-k8s.fullname" $ }}-{{ .analysis.templateName }}
             startingStep: {{ .analysis.startingStep | default 1 }}
-            failureLimit: 0
+            # failureLimit: 0
           {{- end }}
         {{- end }}
         {{- end }}

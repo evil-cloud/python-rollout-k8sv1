@@ -102,13 +102,11 @@ rollout:
         enabled: true
         templateName: success-rate-analysis
         startingStep: 1
-        failureLimit: 0
     - setWeight: 25
       analysis:
         enabled: true
         templateName: success-rate-analysis
         startingStep: 2
-        failureLimit: 0
     - setWeight: 50
       pause:
         enabled: false
@@ -117,7 +115,6 @@ rollout:
         enabled: true
         templateName: success-rate-analysis
         startingStep: 3
-        failureLimit: 0
     - setWeight: 75
       pause:
         enabled: true
@@ -126,7 +123,6 @@ rollout:
         enabled: true
         templateName: success-rate-analysis
         startingStep: 4
-        failureLimit: 0
     - setWeight: 100
       pause:
         enabled: true
@@ -135,4 +131,3 @@ rollout:
         enabled: true
         templateName: success-rate-analysis
         startingStep: 5
-        failureLimit: 0
