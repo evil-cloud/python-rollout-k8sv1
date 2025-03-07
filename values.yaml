@@ -64,7 +64,7 @@ readinessProbe:
   periodSeconds: 5
 autoscaling:
   enabled: true
-  minReplicas: 10
+  minReplicas: 5
   maxReplicas: 15
   targetCPUUtilizationPercentage: 80
 extraVolumes:
@@ -91,7 +91,7 @@ analysisTemplates:
     failure: result < 0.90
   query: ""
 rollout:
-  replicas: 10
+  replicas: 5
   strategy:
     steps:
     - setWeight: 10
