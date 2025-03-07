@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "rollout-k8s.labels" . | nindent 4 }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.service.type }}
   ports:
     - name: http
       port: {{ .Values.service.port }}
