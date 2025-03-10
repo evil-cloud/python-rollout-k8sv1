@@ -3,7 +3,7 @@ fullnameOverride: python-gitops-canary
 image:
   repository: d4rkghost47/python-rollout-appv1
   pullPolicy: IfNotPresent
-  tag: ea02a207
+  tag: 745bef2b
 version: v1
 serviceAccount:
   create: true
@@ -68,10 +68,10 @@ autoscaling:
   maxReplicas: 15
   targetCPUUtilizationPercentage: 80
 persistence:
-  enabled: true 
-  storageClass: "longhorn"  
+  enabled: true
+  storageClass: longhorn
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   size: 1Gi
   volumeName: sqlite-storage
   mountPath: /app/data
