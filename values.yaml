@@ -67,12 +67,15 @@ autoscaling:
   minReplicas: 5
   maxReplicas: 15
   targetCPUUtilizationPercentage: 80
-extraVolumes:
-- name: sqlite-storage
-  emptyDir: {}
-extraVolumeMounts:
-- mountPath: /app/data
-  name: sqlite-storage
+persistence:
+  enabled: true 
+  storageClass: "longhorn"  
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  volumeName: sqlite-storage
+  mountPath: /app/data
+  pvcName: sqlite-pvc
 metrics:
   serviceMonitor:
     enabled: true

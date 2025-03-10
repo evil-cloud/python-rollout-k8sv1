@@ -22,7 +22,6 @@ spec:
             templates:
               - templateName: {{ include "rollout-k8s.fullname" $ }}-{{ .analysis.templateName }}
             startingStep: {{ .analysis.startingStep | default 1 }}
-            # failureLimit: 0
           {{- end }}
         {{- end }}
         {{- end }}
@@ -54,7 +53,14 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- if .Values.persistence.enabled }}
+            - mountPath: {{ .Values.persistence.mountPath }}
+              name: {{ .Values.persistence.volumeName }}
+            {{- end }}
       volumes:
-        {{- toYaml .Values.extraVolumes | nindent 8 }}
+        {{- if .Values.persistence.enabled }}
+        - name: {{ .Values.persistence.volumeName }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.pvcName }}
+        {{- end }}
 
