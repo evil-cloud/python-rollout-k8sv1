@@ -71,7 +71,7 @@ persistence:
   enabled: true
   storageClass: longhorn
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   size: 1Gi
   volumeName: sqlite-storage
   mountPath: /app/data
