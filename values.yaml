@@ -69,7 +69,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 persistence:
   enabled: true
-  storageClass: longhorn
+  storageClass: longhorn-rwx
   accessModes:
   - ReadWriteMany
   size: 1Gi
